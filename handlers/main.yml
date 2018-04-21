@@ -1,0 +1,11 @@
+---
+
+- name: Restart spamassassin
+  service:
+    name: 'spamassassin'
+    state: 'restarted'
+    
+- name: Restart postfix
+  service:
+    name: 'postfix'
+    state: 'restarted'

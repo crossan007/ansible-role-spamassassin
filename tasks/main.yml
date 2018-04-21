@@ -1,0 +1,36 @@
+---
+
+- name: Install Spamassassin APT packages
+  apt:
+    name: '{{ item }}'
+    state: 'present'
+    install_recommends: False
+  with_flattened:
+    - '{{ sa_base_packages }}'
+  when: ansible_pkg_mgr == 'apt'
+
+- name: Configure Spamassassin user
+  user:
+    name: spamd 
+    comment: user for Spamassassin
+    uid: 5001
+    shell: /usr/bin/false
+    home: /home/spamd
+
+- name: Generate spamassassin 'default'
+  template:
+    src: 'default/spamassassin.conf.j2'
+    dest: '/etc/default/spamassassin'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: [ 'Restart spamassassin' ]
+
+- name: Generate spamassassin 'local.cf' configuration
+  template:
+    src: 'spamassassin/local.cf.j2'
+    dest: '/etc/spamassassin/local.cf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  notify: [ 'Restart spamassassin' ]

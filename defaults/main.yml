@@ -1,0 +1,1 @@
+sa_base_packages: ['spamassassin', 'spamc']
